@@ -37,10 +37,18 @@ public class SensoryPacketSender
      * LINE6: Agent's messages
      * LINE7: Agent's energy
      * LINE8: last action's result status (ok or fail)
+     * LINE9: simulator status
      * @param a the agent to which the information should be sent
      */
+    
+    /* wrapper class */
+    public void sendSensationsToAgent(GOBAgent a)
+    {
+        sendSensationsToAgent(a, "CONTINUE");
+    }
+    
     @SuppressWarnings("unchecked")
-    public void sendSensationsToAgent(GOBAgent a) {
+    public void sendSensationsToAgent(GOBAgent a, String simStatus) {
         if (a.getNeedUpdate()) {
             JSONArray jsonArray = new JSONArray();
             // We added String.valueOf to make sure that everything that is send is a String.
@@ -60,6 +68,7 @@ public class SensoryPacketSender
             jsonArray.add(String.valueOf(a.energy()));  // 6. send agent's energy
             jsonArray.add(String.valueOf(a.lastActionStatus()));// 7. send last-action status
             jsonArray.add(String.valueOf(a.simTime())); // 8. send world time
+            jsonArray.add(simStatus); // 9. send simulator status
             a.send().println(jsonArray); // send JsonArray
             a.setNeedUpdate(false);
         }
