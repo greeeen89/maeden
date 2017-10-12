@@ -90,8 +90,6 @@ public class Grid
         // Initialize grid map now from read sizes
         myMap = new LinkedListGOB[xCols][yRows]; // note: non-conventional order of columns, rows
         agents = Collections.synchronizedList(new LinkedList<GOBAgent>());
-        shuffled_agents = new LinkedList<GOBAgent>(agents); //copies contents of shuffled agents into new list
-        Collections.shuffle(shuffled_agents); //initially shuffles list
 
         // set cell size from desired physical window width and logical size found in file
         squareSize = approxWidth / xCols;
@@ -236,7 +234,7 @@ public class Grid
      */
     public void processAgentActions() {
         try {
-            for (GOBAgent a : shuffled_agents) {
+            for (GOBAgent a : agents) {
                 a.getNextCommand();           //have current agent get next command from controller process
                 //System.out.println("processing agent " + a.getAgentID() + " with action: " + a.nextCommand());
             }
@@ -263,7 +261,7 @@ public class Grid
         } catch (Exception e) { System.out.println("Failed processing the messages: " + e);}
         //System.out.println("Messages collected");
         try {
-            for(Iterator<GOBAgent> i = shuffled_agents.iterator(); i.hasNext(); ) {          //remove any dead agents
+            for(Iterator<GOBAgent> i = agents.iterator(); i.hasNext(); ) {          //remove any dead agents
                 GOBAgent a = i.next();
                 switch(a.status()) {
                 case 'd':                       // die: agent died from lack of energy or quicksand
