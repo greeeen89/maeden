@@ -1,6 +1,7 @@
 package org.maeden.controller;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.util.List;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class SensoryPacket
     boolean lastActionStatus;
     int worldTime;
     String[] rawSenseData;
+    JSONArray jsonArray;
 
     /**
      * constructor that reads the raw data from the server via the provided BufferedReader
@@ -85,12 +87,23 @@ public class SensoryPacket
      */
     protected String[] getRawSenseDataFromGrid(BufferedReader gridIn) {
         String[] result = new String[Integer.parseInt(NUMLINES)];
+        ArrayList<String> intermediate = new ArrayList<String>(); // = new String[Integer.parseInt(NUMLINES)]
         try {
             JSONParser jsonParser = new JSONParser();
-            Object object = jsonParser.parse(gridIn.readLine()); // unpack the JsonArray.
-            JSONArray jsonArray = (JSONArray) object;
-            for (int i = 0; i < jsonArray.size(); i++) {
-                result[i] = jsonArray.get(i).toString(); // fill the the reasultArray with the information.
+            jsonArray = (JSONArray) jsonParser.parse(gridIn.readLine()); // unpack the JsonArray.
+            //JSONArray jsonArray = (JSONArray) object;
+            for (int i = 0 ; i < jsonArray.size() ; i++){
+                //int x = ((JSONObject[]) (jsonArray.get(i))).length;
+                JSONArray intArray = (JSONArray) jsonArray.get(i);
+                if ( intArray.getClass() == JSONArray.class ){
+                    for(int j = 0 ; j < intArray.size() ; j++){
+                        intermediate.add(intArray.get(j).toString());
+                    }
+                result[i] = intermediate.toString();
+                }
+                else{
+                    result[i] = jsonArray.get(i).toString(); // fill the the resultArray with the information.
+                }
             }
         } catch (Exception e){
             e.getMessage();

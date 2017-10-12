@@ -44,15 +44,19 @@ public class SensoryPacketSender
         if (a.getNeedUpdate()) {
             JSONArray jsonArray = new JSONArray();
             // We added String.valueOf to make sure that everything that is send is a String.
+            //jsonArray.add(a.status());
             jsonArray.add(String.valueOf(Grid.relDirToPt(a.pos, new Point(a.dx(), a.dy()), food.pos))); // 1. send smell
+            JSONArray invArray = new JSONArray();
+            
             String inv = "(";
             if (a.inventory().size() > 0){
                 for (GridObject gob : a.inventory()) {
-                    inv += "\"" + gob.printChar() + "\" ";
+                    //inv += "\"" + gob.printChar() + "\" ";
+                    invArray.add("\"" + gob.printChar() + "\" ");
                 }
             }
             inv = inv.trim() + ")";
-            jsonArray.add(String.valueOf(inv)); // 2. send inventory
+            jsonArray.add(String.valueOf(invArray)); // 2. send inventory
             jsonArray.add(String.valueOf(visField(a.pos, new Point(a.dx(), a.dy())))); // 3. send visual info
             jsonArray.add(String.valueOf(groundContents(a, myMap[a.pos.x][a.pos.y])));  // 4.send contents of current location
             //jsonArray.add(String.valueOf(sendAgentMessages(a)));  // 5. send any messages that may be heard by the agent
