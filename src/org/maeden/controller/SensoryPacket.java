@@ -194,7 +194,15 @@ public class SensoryPacket
     /**
      * @return the current contents of the inventory as a list
      */
-    public List<Character> getInventory(){ return inventory; }
+    public List<Character> getInventory(){
+        //return inventory;
+        List<Character> finalInv = new ArrayList<Character>();
+        JSONArray inv = (JSONArray) jsonArray.get(1);
+        for(int i = 0 ; i < inv.size() ; i++){
+            finalInv.add((Character) inv.get(i));
+        }
+        return finalInv;
+        }
 
     /**
      * @return the array of lists of strings representing what is currently within the field of view
