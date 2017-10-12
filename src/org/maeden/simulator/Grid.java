@@ -548,6 +548,7 @@ public class Grid
         if( agents != null && !agents.isEmpty() ) {  //if there are agents on the grid still
             for(GOBAgent g : agents) {  //iterate through and close their connections
                 g.printstats();
+                sps.sendSensationsToAgent(g);
                 g.send().println("End");              //Other agent got food, simulation ended
                 g.cleanDie();
             }

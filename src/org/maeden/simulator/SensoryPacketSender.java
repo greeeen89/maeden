@@ -52,13 +52,13 @@ public class SensoryPacketSender
             if (a.inventory().size() > 0){
                 for (GridObject gob : a.inventory()) {
                     //inv += "\"" + gob.printChar() + "\" ";
-                    invArray.add("\"" + gob.printChar() + "\" ");
+                    invArray.add(gob.printChar()); //"\"" + ...  + "\" "
                 }
             }
             inv = inv.trim() + ")";
-            jsonArray.add(String.valueOf(invArray)); // 2. send inventory
+            jsonArray.add((invArray)); // 2. send inventory String.valueOf
             jsonArray.add(String.valueOf(visField(a.pos, new Point(a.dx(), a.dy())))); // 3. send visual info
-            jsonArray.add(String.valueOf(groundContents(a, myMap[a.pos.x][a.pos.y])));  // 4.send contents of current location
+            jsonArray.add(groundContents(a, myMap[a.pos.x][a.pos.y]));  // 4.send contents of current location
             //jsonArray.add(String.valueOf(sendAgentMessages(a)));  // 5. send any messages that may be heard by the agent
             jsonArray.add("[]");
             jsonArray.add(String.valueOf(a.energy()));  // 6. send agent's energy
@@ -151,23 +151,36 @@ public class SensoryPacketSender
      * Post: String is returned in form: ("cont1" "cont2" "cont3" ...)
      *       where cont is the individual contents of the cell
      */
-    public String groundContents(GOBAgent a, List<GridObject> thisCell) {
+    @SuppressWarnings("unchecked")
+    public JSONArray groundContents(GOBAgent a, List<GridObject> thisCell) {
         if (thisCell != null && ! thisCell.isEmpty()) {
             //encapsulate contents within parentheses
-            String ground = "(";
-            //iterate through the cell, gather the print-chars
+//            String ground = "(";
+//            //iterate through the cell, gather the print-chars
+//            for(GridObject gob : thisCell){
+//                //if the gob is an agent (and not the one passed in) get the agent id
+//                if ((gob.printChar() == 'A' || gob.printChar() == 'H') && ((GOBAgent) gob != a)) {
+//                    ground = ground + "\"" + ((GOBAgent)gob).getAgentID() + "\" ";   // \" specifies the string "
+//                } else if (gob.printChar() != 'A' && gob.printChar() != 'H') {
+//                    ground += "\"" +  gob.printChar() + "\" ";
+//                }
+//            }
+            //Create an array to hold the contents of the cell
+            JSONArray groundArray = new JSONArray();
             for(GridObject gob : thisCell){
-                //if the gob is an agent (and not the one passed in) get the agent id
+              //if the gob is an agent (and not the one passed in) get the agent id
                 if ((gob.printChar() == 'A' || gob.printChar() == 'H') && ((GOBAgent) gob != a)) {
-                    ground = ground + "\"" + ((GOBAgent)gob).getAgentID() + "\" ";   // \" specifies the string "
+                    groundArray.add(((GOBAgent)gob).getAgentID());
                 } else if (gob.printChar() != 'A' && gob.printChar() != 'H') {
-                    ground += "\"" +  gob.printChar() + "\" ";
+                    groundArray.add(("\"" +  gob.printChar() + "\" ").toString());
                 }
-            }
-            ground = ground.trim() + ')';  //trim any leading or ending spaces, close paren
-            return ground;
+            } 
+            //ground = ground.trim() + ')';  //trim any leading or ending spaces, close paren
+            return groundArray;
         }
-        return "()";
+        JSONArray emptyGroundArray = new JSONArray();
+        emptyGroundArray.add("");
+        return emptyGroundArray;
     }
 
 }

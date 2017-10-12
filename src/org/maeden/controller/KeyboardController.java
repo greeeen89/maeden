@@ -89,11 +89,20 @@ public class KeyboardController extends AbstractAgentController {
         // 1: get the smell info
         String heading = rawSenses[0];
         // 2: get the inventory
-        String inventory = rawSenses[1];
+        String inv = "";
+        for(Character i : sp.getInventory()){
+            inv = inv + "," + i.toString();
+        }
+        String inventory = inv;
+        //String inventory = sp.getInventory().toString();
         // 3: get the currently visible objects info the visField list for display
         processRetinalField(sp.getVisualArray());
         // 4: get ground contents
-        String ground = rawSenses[3];
+        String ground = "";
+        for(Character i : sp.getGroundContents()){
+            ground = ground + "," + i.toString();
+        }
+        //String ground = rawSenses[3];
         // 5: get messages
         String messages = rawSenses[4]; //CHECKS MESSAGES ****CHANGE****
         // 6: energy
