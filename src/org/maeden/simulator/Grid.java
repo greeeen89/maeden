@@ -50,6 +50,7 @@ public class Grid
     private List<ComSentence> msgs = Collections.synchronizedList(new LinkedList<ComSentence>());   //holds agent messages
     private List<GridObject> gobs = Collections.synchronizedList(new LinkedList<GridObject>());   //holds world gridobjects
     private List<GOBAgent> agents; //holds world agents
+    private List<GOBAgent> shuffled_agents; //holds shuffled list of agents to account for bias in agent collisions
     private LinkedListGOB[][] myMap;                 //holds gridobjects
     private SensoryPacketSender sps;
 
@@ -89,6 +90,8 @@ public class Grid
         // Initialize grid map now from read sizes
         myMap = new LinkedListGOB[xCols][yRows]; // note: non-conventional order of columns, rows
         agents = Collections.synchronizedList(new LinkedList<GOBAgent>());
+        shuffled_agents = new LinkedList<GOBAgent>(agents); //copies contents of shuffled agents into new list
+        Collections.shuffle(shuffled_agents); //initially shuffles list
 
         // set cell size from desired physical window width and logical size found in file
         squareSize = approxWidth / xCols;
