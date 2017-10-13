@@ -100,7 +100,7 @@ public class KeyboardController extends AbstractAgentController {
         // 4: get ground contents
         String ground = "";
         for(Character i : sp.getGroundContents()){
-            ground = ground + "," + i.toString();
+            ground = ground + i.toString();
         }
         //String ground = rawSenses[3];
         // 5: get messages
