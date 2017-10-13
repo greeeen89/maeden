@@ -50,7 +50,6 @@ public class Grid
     private List<ComSentence> msgs = Collections.synchronizedList(new LinkedList<ComSentence>());   //holds agent messages
     private List<GridObject> gobs = Collections.synchronizedList(new LinkedList<GridObject>());   //holds world gridobjects
     private List<GOBAgent> agents; //holds world agents
-    private List<GOBAgent> shuffled_agents; //holds shuffled list of agents to account for bias in agent collisions
     private LinkedListGOB[][] myMap;                 //holds gridobjects
     private SensoryPacketSender sps;
 
@@ -90,7 +89,6 @@ public class Grid
         // Initialize grid map now from read sizes
         myMap = new LinkedListGOB[xCols][yRows]; // note: non-conventional order of columns, rows
         agents = Collections.synchronizedList(new LinkedList<GOBAgent>());
-        shuffled_agents = Collections.synchronizedList(new LinkedList<GOBAgent>());
 
         // set cell size from desired physical window width and logical size found in file
         squareSize = approxWidth / xCols;
@@ -235,14 +233,14 @@ public class Grid
      */
     public void processAgentActions() {
         try {
-            for (GOBAgent a : shuffled_agents) {
+            for (GOBAgent a : agents) {
                 a.getNextCommand();           //have current agent get next command from controller process
                 //System.out.println("processing agent " + a.getAgentID() + " with action: " + a.nextCommand());
             }
         } catch (Exception e) { System.out.println("Failed reading the next command: " + e);}
         try {
             int how_many_agents_acted = 0;
-            for (GOBAgent a : shuffled_agents) {    //process and perform each agent's action
+            for (GOBAgent a : agents) {    //process and perform each agent's action
                 //Process the action only if there is a next command
                 if(a.nextCommand() != null)
                     {
@@ -254,7 +252,7 @@ public class Grid
                     a.decrEnergyWait(); // otherwise, deduct the wait cost from agent's energy
                 }
             }
-            if(how_many_agents_acted > 1){Collections.shuffle(shuffled_agents);} // shuffles shuffled_agents list to 
+            if(how_many_agents_acted > 1){Collections.shuffle(agents);} // shuffles agents list to 
                                                                                 // counteract bias in agent collisions
         } catch (Exception e) {
             System.out.println("Failed processing the next command just read");
@@ -266,7 +264,7 @@ public class Grid
         } catch (Exception e) { System.out.println("Failed processing the messages: " + e);}
         //System.out.println("Messages collected");
         try {
-            for(Iterator<GOBAgent> i = shuffled_agents.iterator(); i.hasNext(); ) {          //remove any dead agents
+            for(Iterator<GOBAgent> i = agents.iterator(); i.hasNext(); ) {          //remove any dead agents
                 GOBAgent a = i.next();
                 switch(a.status()) {
                 case 'd':                       // die: agent died from lack of energy or quicksand
@@ -649,10 +647,7 @@ public class Grid
                     grid.addGOB(gagent); // addGOB(...) is synchronized on gobs
                     synchronized (agents) {
                         agents.add(gagent);
-                    }
-                    synchronized (shuffled_agents) {
-                        shuffled_agents.add(gagent);
-                        Collections.shuffle(shuffled_agents);
+                        Collections.shuffle(agents);
                     }
                     try { sps.sendSensationsToAgent(gagent); }
                     catch (Exception e) {System.out.println("AgentListener.run(): failure sending sensations " + e); }
