@@ -91,7 +91,7 @@ public class KeyboardController extends AbstractAgentController {
         // 2: get the inventory
         String inv = "";
         for(Character i : sp.getInventory()){
-            inv = inv + "," + i.toString();
+            inv = inv + i.toString();
         }
         String inventory = inv;
         //String inventory = sp.getInventory().toString();

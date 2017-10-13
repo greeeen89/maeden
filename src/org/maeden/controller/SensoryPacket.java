@@ -197,6 +197,7 @@ public class SensoryPacket
         String open = "(";
         String close = ")";
         String quote = "\"";
+        String comma = ",";
         List<Character> finalInv = new ArrayList<Character>();
         finalInv.add(open.charAt(0));
         JSONArray inv = (JSONArray) jsonArray.get(1);
@@ -206,6 +207,9 @@ public class SensoryPacket
                 finalInv.add(quote.charAt(0));
                 finalInv.add(x.charAt(j));
                 finalInv.add(quote.charAt(0));
+                if(i + 1 < inv.size()){
+                    finalInv.add(comma.charAt(0));
+                }
             }
         }
         finalInv.add(close.charAt(0));
@@ -225,12 +229,22 @@ public class SensoryPacket
         List<Character> finalGround = new ArrayList<Character>();
         String open = "(";
         String close = ")";
+        String comma = ",";
+        String quote = "\"";
         finalGround.add(open.charAt(0));
         JSONArray ground = (JSONArray) jsonArray.get(3);
         for(int i = 0 ; i < ground.size() ; i++){
             for(int j = 0 ; j < ground.get(i).toString().length()-1 ; j++){
                 String x = ground.get(i).toString();
-                finalGround.add(x.charAt(j));
+                if (x != quote){
+                    finalGround.add(quote.charAt(0));
+                    finalGround.add(x.charAt(j));
+                    finalGround.add(quote.charAt(0));
+                    if(i + 1 < ground.size()){
+                        finalGround.add(comma.charAt(0));
+                    }
+                }
+                
             }
         }
         finalGround.add(close.charAt(0));
