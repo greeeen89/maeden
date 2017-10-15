@@ -60,7 +60,8 @@ public class SensoryPacketSender
             jsonArray.add(String.valueOf(visField(a.pos, new Point(a.dx(), a.dy())))); // 3. send visual info
             jsonArray.add(groundContents(a, myMap[a.pos.x][a.pos.y]));  // 4.send contents of current location
             //jsonArray.add(String.valueOf(sendAgentMessages(a)));  // 5. send any messages that may be heard by the agent
-            jsonArray.add("[]");
+            JSONArray messagesArray = new JSONArray();
+            jsonArray.add(messagesArray);
             jsonArray.add(String.valueOf(a.energy()));  // 6. send agent's energy
             jsonArray.add(String.valueOf(a.lastActionStatus()));// 7. send last-action status
             jsonArray.add(String.valueOf(a.simTime())); // 8. send world time
