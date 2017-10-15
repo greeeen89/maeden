@@ -236,15 +236,15 @@ public class SensoryPacket
         for(int i = 0 ; i < ground.size() ; i++){
             for(int j = 0 ; j < ground.get(i).toString().length()-1 ; j++){
                 String x = ground.get(i).toString();
-                if (x != quote){
+                char y = x.charAt(j);
+                if (y != quote.charAt(0) & y != comma.charAt(0)){
                     finalGround.add(quote.charAt(0));
-                    finalGround.add(x.charAt(j));
+                    finalGround.add(y);
                     finalGround.add(quote.charAt(0));
                     if(i + 1 < ground.size()){
                         finalGround.add(comma.charAt(0));
                     }
                 }
-                
             }
         }
         finalGround.add(close.charAt(0));
