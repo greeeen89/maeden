@@ -93,14 +93,6 @@ public class SensoryPacket
             jsonArray = (JSONArray) jsonParser.parse(gridIn.readLine()); // unpack the JsonArray.
             //JSONArray jsonArray = (JSONArray) object;
             for (int i = 0 ; i < jsonArray.size() ; i++){
-                //int x = ((JSONObject[]) (jsonArray.get(i))).length;
-//                JSONArray intArray = (JSONArray) jsonArray.get(i);
-//                if ( intArray.getClass() == JSONArray.class ){
-//                    for(int j = 0 ; j < intArray.size() ; j++){
-//                        intermediate.add(intArray.get(j).toString());
-//                    }
-//                result[i] = intermediate.toString();
-//                }
                 result[i] = jsonArray.get(i).toString(); // fill the the resultArray with the information.
             }
         } catch (Exception e){

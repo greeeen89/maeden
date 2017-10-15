@@ -48,14 +48,11 @@ public class SensoryPacketSender
             jsonArray.add(String.valueOf(Grid.relDirToPt(a.pos, new Point(a.dx(), a.dy()), food.pos))); // 1. send smell
             JSONArray invArray = new JSONArray();
             
-            //String inv = "(";
             if (a.inventory().size() > 0){
                 for (GridObject gob : a.inventory()) {
-                    //inv += "\"" + gob.printChar() + "\" ";
-                    invArray.add(Character.toString(gob.printChar())); //"\"" + ...  + "\" "
+                    invArray.add(Character.toString(gob.printChar()));
                 }
             }
-            //inv = inv.trim() + ")";
             jsonArray.add((invArray)); // 2. send inventory String.valueOf
             jsonArray.add(String.valueOf(visField(a.pos, new Point(a.dx(), a.dy())))); // 3. send visual info
             jsonArray.add(groundContents(a, myMap[a.pos.x][a.pos.y]));  // 4.send contents of current location
