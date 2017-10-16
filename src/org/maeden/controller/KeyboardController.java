@@ -82,7 +82,7 @@ public class KeyboardController extends AbstractAgentController {
     /**
      * processSensoryInfo via the currentSensePacket or currentRawSenseData
      */
-    public void processSensoryInfo() {
+     public void processSensoryInfo() {
         SensoryPacket sp = currentSensePacket;
         //sp.printVisualArray();
         String[] rawSenses = sp.getRawSenseData();
