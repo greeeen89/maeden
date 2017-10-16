@@ -1,6 +1,7 @@
 package org.maeden.simulator;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 import org.json.simple.JSONArray;
 
@@ -53,7 +54,7 @@ public class SensoryPacketSender
                     invArray.add(Character.toString(gob.printChar()));
                 }
             }
-            jsonArray.add((invArray)); // 2. send inventory String.valueOf
+            jsonArray.add((invArray)); // 2. send inventory
             jsonArray.add(String.valueOf(visField(a.pos, new Point(a.dx(), a.dy())))); // 3. send visual info
             jsonArray.add(groundContents(a, myMap[a.pos.x][a.pos.y]));  // 4.send contents of current location
             //jsonArray.add(String.valueOf(sendAgentMessages(a)));  // 5. send any messages that may be heard by the agent
@@ -109,25 +110,25 @@ public class SensoryPacketSender
      * @param heading (which is not used)
      * @return a String that represents a list of items in the cell
      */
-    private String visChar(List<GridObject> cellContents, Point heading){
-        String cellConts = "(";
+    @SuppressWarnings("unchecked")
+    private JSONArray visChar(List<GridObject> cellContents, Point heading){
+        JSONArray cellContsArray = new JSONArray();
+        JSONArray emptyCellConts = new JSONArray();
         //if there are any gridobjects in the cell iterate and collect them
         if (cellContents != null && !cellContents.isEmpty()) {
             //iterate through cellContents, gather printchars or agent IDs
             for(GridObject gObj : cellContents) {
                 if(gObj.printChar() == 'A') {           //if it is an agent
-                    cellConts = cellConts + "\"" + ((GOBAgent)gObj).getAgentID() + "\" ";
+                    cellContsArray.add(String.valueOf(((GOBAgent)gObj).getAgentID()));
                 } else {        //if gridobject is not an agent, return its print character
-                    cellConts = cellConts + "\"" + gObj.printChar() + "\" ";
+                    cellContsArray.add(gObj.printChar());
                 }
             }
-            //trim leading and closing spaces
-            cellConts = cellConts.trim() + ')';
-            return cellConts;
+            return cellContsArray;
         }
         //otherwise return a space representing no gridobject
         else
-            return "()";
+            return emptyCellConts;
     }
 
     
@@ -152,17 +153,6 @@ public class SensoryPacketSender
     @SuppressWarnings("unchecked")
     public JSONArray groundContents(GOBAgent a, List<GridObject> thisCell) {
         if (thisCell != null && ! thisCell.isEmpty()) {
-            //encapsulate contents within parentheses
-//            String ground = "(";
-//            //iterate through the cell, gather the print-chars
-//            for(GridObject gob : thisCell){
-//                //if the gob is an agent (and not the one passed in) get the agent id
-//                if ((gob.printChar() == 'A' || gob.printChar() == 'H') && ((GOBAgent) gob != a)) {
-//                    ground = ground + "\"" + ((GOBAgent)gob).getAgentID() + "\" ";   // \" specifies the string "
-//                } else if (gob.printChar() != 'A' && gob.printChar() != 'H') {
-//                    ground += "\"" +  gob.printChar() + "\" ";
-//                }
-//            }
             //Create an array to hold the contents of the cell
             JSONArray groundArray = new JSONArray();
             for(GridObject gob : thisCell){
@@ -173,7 +163,6 @@ public class SensoryPacketSender
                     groundArray.add(("\"" +  gob.printChar() + "\" ").toString());
                 }
             } 
-            //ground = ground.trim() + ')';  //trim any leading or ending spaces, close paren
             return groundArray;
         }
         JSONArray emptyGroundArray = new JSONArray();
