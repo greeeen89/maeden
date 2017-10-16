@@ -55,7 +55,7 @@ public class SensoryPacketSender
                 }
             }
             jsonArray.add((invArray)); // 2. send inventory
-            jsonArray.add(String.valueOf(visField(a.pos, new Point(a.dx(), a.dy())))); // 3. send visual info
+            jsonArray.add(visField(a.pos, new Point(a.dx(), a.dy()))); // 3. send visual info
             jsonArray.add(groundContents(a, myMap[a.pos.x][a.pos.y]));  // 4.send contents of current location
             //jsonArray.add(String.valueOf(sendAgentMessages(a)));  // 5. send any messages that may be heard by the agent
             JSONArray messagesArray = new JSONArray();
@@ -78,26 +78,31 @@ public class SensoryPacketSender
      * The row behind the agent is given first followed by its current row and progressing away from the agent
      * with characters left-to-right in visual field.
      */
-    public String visField(Point aPt, Point heading){
-        String myString = "(";
+    @SuppressWarnings("unchecked")
+    public JSONArray visField(Point aPt, Point heading){
+        //String myString = "(";
+        JSONArray visFieldArray = new JSONArray();
         int senseRow, senseCol;
         //iterate from one behind to five in front of agent point
         for (int relRow=-1; relRow <= 5; relRow++) {
             //add paren for the row
-            myString += "(";
-            String rowString = "";
+            //myString += "(";
+            //String rowString = "";
+            JSONArray rowVisArray = new JSONArray();
             //iterate from two to the left to two to the right of agent point
             for (int relCol=-2; relCol <= 2; relCol++){
                 senseRow = aPt.x + relRow * heading.x + relCol * -heading.y;
                 senseCol = aPt.y + relRow * heading.y + relCol * heading.x;
                 //add cell information
-                rowString += " " + visChar(mapRef(senseRow, senseCol), heading);
+                rowVisArray.add(visChar(mapRef(senseRow, senseCol), heading));
             }
             //trim any leading or closing spaces, close row paren
-            myString += rowString.trim() + ")";
+            //myString += rowString.trim() + ")";
+            visFieldArray.add(rowVisArray);
         }
         //return string with close paren
-        return myString + ')';
+        //return myString + ')';
+        return visFieldArray;
     }
 
     /** visChar iterates through the gridobjects located in a cell and returns all of their printchars
