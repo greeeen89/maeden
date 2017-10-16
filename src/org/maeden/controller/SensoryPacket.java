@@ -1,13 +1,14 @@
 package org.maeden.controller;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.io.BufferedReader;
 import java.util.StringTokenizer;
-//Hello
+
 /**
  * Simple class for representing 'pre-processed' sensory packets.
  * Agents can bypass the low-level 'raw' sensory data and especially the problem of parsing
@@ -32,6 +33,7 @@ public class SensoryPacket
     boolean lastActionStatus;
     int worldTime;
     String[] rawSenseData;
+    JSONArray jsonArray;
 
     /**
      * constructor that reads the raw data from the server via the provided BufferedReader
@@ -85,12 +87,13 @@ public class SensoryPacket
      */
     protected String[] getRawSenseDataFromGrid(BufferedReader gridIn) {
         String[] result = new String[Integer.parseInt(NUMLINES)];
+        //ArrayList<String> intermediate = new ArrayList<String>(); // = new String[Integer.parseInt(NUMLINES)]
         try {
             JSONParser jsonParser = new JSONParser();
-            Object object = jsonParser.parse(gridIn.readLine()); // unpack the JsonArray.
-            JSONArray jsonArray = (JSONArray) object;
-            for (int i = 0; i < jsonArray.size(); i++) {
-                result[i] = jsonArray.get(i).toString(); // fill the the reasultArray with the information.
+            jsonArray = (JSONArray) jsonParser.parse(gridIn.readLine()); // unpack the JsonArray.
+            //JSONArray jsonArray = (JSONArray) object;
+            for (int i = 0 ; i < jsonArray.size() ; i++){
+                result[i] = jsonArray.get(i).toString(); // fill the the resultArray with the information.
             }
         } catch (Exception e){
             e.getMessage();
@@ -181,7 +184,29 @@ public class SensoryPacket
     /**
      * @return the current contents of the inventory as a list
      */
-    public List<Character> getInventory(){ return inventory; }
+    public List<Character> getInventory(){
+        //return inventory;
+        String open = "(";
+        String close = ")";
+        String quote = "\"";
+        String comma = ",";
+        List<Character> finalInv = new ArrayList<Character>();
+        finalInv.add(open.charAt(0));
+        JSONArray inv = (JSONArray) jsonArray.get(1);
+        for(int i = 0 ; i < inv.size() ; i++){
+            for(int j = 0 ; j < inv.get(i).toString().length() ; j++){
+                String x = inv.get(i).toString();
+                finalInv.add(quote.charAt(0));
+                finalInv.add(x.charAt(j));
+                finalInv.add(quote.charAt(0));
+                if(i + 1 < inv.size()){
+                    finalInv.add(comma.charAt(0));
+                }
+            }
+        }
+        finalInv.add(close.charAt(0));
+        return finalInv;
+        }
 
     /**
      * @return the array of lists of strings representing what is currently within the field of view
@@ -191,7 +216,32 @@ public class SensoryPacket
     /**
      * @return the list of characters on the ground where the agent is standing
      */
-    public List<Character> getGroundContents(){ return groundContents; }
+    public List<Character> getGroundContents(){ 
+        //return groundContents; 
+        List<Character> finalGround = new ArrayList<Character>();
+        String open = "(";
+        String close = ")";
+        String comma = ",";
+        String quote = "\"";
+        finalGround.add(open.charAt(0));
+        JSONArray ground = (JSONArray) jsonArray.get(3);
+        for(int i = 0 ; i < ground.size() ; i++){
+            for(int j = 0 ; j < ground.get(i).toString().length()-1 ; j++){
+                String x = ground.get(i).toString();
+                char y = x.charAt(j);
+                if (y != quote.charAt(0) & y != comma.charAt(0)){
+                    finalGround.add(quote.charAt(0));
+                    finalGround.add(y);
+                    finalGround.add(quote.charAt(0));
+                    if(i + 1 < ground.size()){
+                        finalGround.add(comma.charAt(0));
+                    }
+                }
+            }
+        }
+        finalGround.add(close.charAt(0));
+        return finalGround;
+        }
 
     /**
      * NOTE: This may be out of sync with the Grid server and may need to be a list or something else.
