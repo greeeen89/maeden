@@ -239,17 +239,21 @@ public class Grid
             }
         } catch (Exception e) { System.out.println("Failed reading the next command: " + e);}
         try {
+            int how_many_agents_acted = 0;
             for (GOBAgent a : agents) {    //process and perform each agent's action
                 //Process the action only if there is a next command
                 if(a.nextCommand() != null)
                     {
                         a.processAction(a.nextCommand());
                         a.setNeedUpdate(true);
+                        how_many_agents_acted ++;
                     }
                 else {
                     a.decrEnergyWait(); // otherwise, deduct the wait cost from agent's energy
                 }
             }
+            if(how_many_agents_acted > 1){Collections.shuffle(agents);} // shuffles agents list to 
+                                                                                // counteract bias in agent collisions
         } catch (Exception e) {
             System.out.println("Failed processing the next command just read");
             e.printStackTrace();
@@ -643,6 +647,7 @@ public class Grid
                     grid.addGOB(gagent); // addGOB(...) is synchronized on gobs
                     synchronized (agents) {
                         agents.add(gagent);
+                        Collections.shuffle(agents);
                     }
                     try { sps.sendSensationsToAgent(gagent); }
                     catch (Exception e) {System.out.println("AgentListener.run(): failure sending sensations " + e); }
