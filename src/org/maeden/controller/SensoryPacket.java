@@ -115,7 +115,7 @@ public class SensoryPacket
             for(char item : rawSenseData[1].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
                 this.inventory.add(item);
             // visual field
-            processRetinalField(rawSenseData[2]);
+            processRetinalField((String) jsonArray.get(2));
             // ground contents
             this.groundContents = new ArrayList<Character>();
             for(char item : rawSenseData[3].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
