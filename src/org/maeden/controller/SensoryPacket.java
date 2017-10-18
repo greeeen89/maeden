@@ -211,7 +211,22 @@ public class SensoryPacket
     /**
      * @return the array of lists of strings representing what is currently within the field of view
      */
-    public ArrayList<ArrayList<Vector<String>>> getVisualArray(){ return visualArray; }
+    @SuppressWarnings("unchecked")
+    public ArrayList<ArrayList<Vector<String>>> getVisualArray(){
+        JSONArray visJSON = (JSONArray) jsonArray.get(2);
+        for(int i = 0 ; i < visJSON.size() ; i++){
+            ArrayList<Vector<String>> z = (ArrayList<Vector<String>>) visJSON;
+            for(int j = 0 ; j < ((JSONArray) visJSON.get(i)).size(); j++){
+                Vector<String> y = (Vector<String>) ((JSONArray) visJSON.get(i)).get(j);
+                for(int k = 0 ; k < ( (JSONArray) ( (JSONArray) visJSON.get(i)).get(j)).size() ; k++){
+                    String x = (String) ( (JSONArray) ( (JSONArray) visJSON.get(i)).get(j)).get(k);
+                    visualArray.get(i).get(j).add(x);
+                }
+                visualArray.get(i).add(y);
+            }
+            visualArray.add(z);
+        }
+        return visualArray; }
 
     /**
      * @return the list of characters on the ground where the agent is standing

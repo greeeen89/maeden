@@ -80,14 +80,10 @@ public class SensoryPacketSender
      */
     @SuppressWarnings("unchecked")
     public JSONArray visField(Point aPt, Point heading){
-        //String myString = "(";
         JSONArray visFieldArray = new JSONArray();
         int senseRow, senseCol;
         //iterate from one behind to five in front of agent point
         for (int relRow=-1; relRow <= 5; relRow++) {
-            //add paren for the row
-            //myString += "(";
-            //String rowString = "";
             JSONArray rowVisArray = new JSONArray();
             //iterate from two to the left to two to the right of agent point
             for (int relCol=-2; relCol <= 2; relCol++){
@@ -96,12 +92,8 @@ public class SensoryPacketSender
                 //add cell information
                 rowVisArray.add(visChar(mapRef(senseRow, senseCol), heading));
             }
-            //trim any leading or closing spaces, close row paren
-            //myString += rowString.trim() + ")";
             visFieldArray.add(rowVisArray);
         }
-        //return string with close paren
-        //return myString + ')';
         return visFieldArray;
     }
 
@@ -126,17 +118,16 @@ public class SensoryPacketSender
                 if(gObj.printChar() == 'A') {           //if it is an agent
                     cellContsArray.add(String.valueOf(((GOBAgent)gObj).getAgentID()));
                 } else {        //if gridobject is not an agent, return its print character
-                    cellContsArray.add(gObj.printChar());
+                    cellContsArray.add(String.valueOf(gObj.printChar()));
                 }
             }
-            return cellContsArray;
+            return cellContsArray; //JSONArray holding strings with contents of cell
         }
         //otherwise return a space representing no gridobject
         else
-            return emptyCellConts;
+            return emptyCellConts; //Empty JSONArray
     }
 
-    
     /**
      * mapRef: safe map reference checking for out-of-bounds indexing
      * @param x the horizontal index
