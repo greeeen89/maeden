@@ -57,7 +57,7 @@ public class Grid
     private GridObject food;                   //world goal
     public static final int MAEDENPORT = 7237; //host server port number
     private ServerSocket gwServer;  // server-socket for listening for connection requests
-
+    public boolean RUN_SIM = true;
     public boolean EAT_FOOD_ENDS_IT = true; // control if eating food terminates sim (true) or increases energy (false)
     public int WORLD_CYCLE_TIME = 200;      // replaces sleepTime to control wall-time length of simulation cycle
 
@@ -77,7 +77,7 @@ public class Grid
             gwServer = new ServerSocket(MAEDENPORT);        //create new server Socket on Maeden port
         } catch(IOException e) {
             System.err.println("could not listen on port: " + MAEDENPORT);
-            System.exit(1);   //exit if cannot use the port number
+            RUN_SIM = false;   //exit if cannot use the port number
         }
 
         /** Parse Data File **/
@@ -208,7 +208,7 @@ public class Grid
      *
      */
     public void run() {
-        while(true) {
+        while(RUN_SIM) {
             try { processAgentActions(); }
             catch (Exception e) {System.out.println("run: failure reading agent actions " + e); }
             try { sendAgentSensations(); }
@@ -562,7 +562,7 @@ public class Grid
           gwServer.close();
           }
           catch(Exception e) {System.out.println("error closing server socket");}*/
-        System.exit(4);  //exit
+        RUN_SIM = false;  // halt run method in Grid
     }
     //socket.Shutdown(SocketShutdown.Both);
     //socket.Close();
