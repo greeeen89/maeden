@@ -404,8 +404,8 @@ public class GOBAgent extends GridObject {
         // if useobj is food, then eat and end
         if ( useTool != null && useTool.printChar() == '+'){
             if ( myGrid.EAT_FOOD_ENDS_IT ){
-                //send.println("success");                                //agent succeeded in using the food
-                sps.sendSensationsToAgent(this, "SUCCESS");
+                send.println("success");                                //agent succeeded in using the food
+                //sps.sendSensationsToAgent(this, "SUCCESS");
                 status = 's';
                 return; // this is the end */
             } else {
@@ -490,8 +490,8 @@ public class GOBAgent extends GridObject {
         if (myGrid.myMap()[pos.x][pos.y] != null)
             for (GridObject go : (myGrid.myMap())[pos.x][pos.y]) {
                 if ( go.printChar() == 'Q' ){
-                    //send.println("die");
-                    sps.sendSensationsToAgent(this, "DIE");
+                    send.println("die");
+                    //sps.sendSensationsToAgent(this, "DIE");
                     status = 'd';
                 }
             }
@@ -502,8 +502,8 @@ public class GOBAgent extends GridObject {
      */
     private void dieIfNoEnergy() {
         if(agentEnergy <= 0) {
-            //send.println("die");                                //agent died
-            sps.sendSensationsToAgent(this, "DIE");
+            send.println("die");                                //agent died
+            //sps.sendSensationsToAgent(this, "DIE");
             status = 'd';
         }
     }

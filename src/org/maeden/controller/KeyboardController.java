@@ -172,6 +172,7 @@ public class KeyboardController extends AbstractAgentController {
             gd.repaint();
             getSensoryInfo();
             processSensoryInfo();
+            System.out.println("Running");
         }
     }
 
