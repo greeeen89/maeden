@@ -15,6 +15,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -190,7 +195,15 @@ public class GOBAgent extends GridObject {
             // Only read in the next command if there is one
             // if there is not, set nextCommand to null
             if(recv.ready()){
-                nextCommand = recv.readLine();
+                JSONParser jsonParser = new JSONParser();
+                JSONObject x = (JSONObject) jsonParser.parse(recv.readLine());
+                if(x.size() > 1){
+                    nextCommand = (String) ((String) x.get("command")) + " " + (String) ((JSONArray) x.get("arguments")).get(0);
+                }
+                else{
+                    nextCommand = (String) x.get("command");
+                }
+                
             }
             else {
                 nextCommand = null;

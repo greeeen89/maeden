@@ -4,6 +4,9 @@ package org.maeden.controller;
 import java.io.*;
 import java.net.*;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 /**
  * class GridClient : useful for any controller that wants to connect and interact with
  * the Grid simulator
@@ -74,9 +77,17 @@ public class GridClient {
      *
      * *NOTE: GOBAgent only looks at first letter of command string unless talk or shout is sent*
      */
+    @SuppressWarnings("unchecked")
     public void effectorSend(String command) {
-        gridOut.println(command);
+        JSONObject toSend = new JSONObject();
+        toSend.put("command", command.substring(0,1));
+        JSONArray strings = new JSONArray();
+        if(command.length() > 1){
+            strings.add(command.substring(2,3));
+            toSend.put("arguments", strings);
+        }
+        gridOut.println(toSend);
     }
         
-
+    
 }

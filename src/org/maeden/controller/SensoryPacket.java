@@ -61,7 +61,7 @@ public class SensoryPacket
         status = inptStatus;
         smell = inptSmell;
         inventory = inptInventory;
-        visualArray = inptVisualArray;
+        //visualArray = inptVisualArray;
         groundContents = inptGroundContents;
         messages = inptMessages;
         energy = inptEnergy;
@@ -87,11 +87,9 @@ public class SensoryPacket
      */
     protected String[] getRawSenseDataFromGrid(BufferedReader gridIn) {
         String[] result = new String[Integer.parseInt(NUMLINES)];
-        //ArrayList<String> intermediate = new ArrayList<String>(); // = new String[Integer.parseInt(NUMLINES)]
         try {
             JSONParser jsonParser = new JSONParser();
             jsonArray = (JSONArray) jsonParser.parse(gridIn.readLine()); // unpack the JsonArray.
-            //JSONArray jsonArray = (JSONArray) object;
             for (int i = 0 ; i < jsonArray.size() ; i++){
                 result[i] = jsonArray.get(i).toString(); // fill the the resultArray with the information.
             }
@@ -130,7 +128,6 @@ public class SensoryPacket
             // world Time
             this.worldTime = Integer.parseInt(rawSenseData[8]);
         }catch (NullPointerException e){ e.getMessage(); }
-
     }
 
     /**
@@ -212,7 +209,17 @@ public class SensoryPacket
     /**
      * @return the array of lists of strings representing what is currently within the field of view
      */
-    public ArrayList<ArrayList<Vector<String>>> getVisualArray(){ return visualArray; }
+    public ArrayList<ArrayList<Vector<String>>> getVisualArray(){
+        JSONArray visJSON = (JSONArray) jsonArray.get(2);
+        for(int i = 0 ; i < visJSON.size() ; i++){
+            for(int j = 0 ; j < ((JSONArray) visJSON.get(i)).size(); j++){
+                for(int k = 0 ; k < ( (JSONArray) ( (JSONArray) visJSON.get(i)).get(j)).size() ; k++){
+                    String x = (String) ( (JSONArray) ( (JSONArray) visJSON.get(i)).get(j)).get(k);
+                    visualArray.get(i).get(j).add(x);
+                }
+            }
+        }
+        return visualArray; }
 
     /**
      * @return the list of characters on the ground where the agent is standing
