@@ -86,8 +86,10 @@ public class KeyboardController extends AbstractAgentController {
         SensoryPacket sp = currentSensePacket;
         //sp.printVisualArray();
         String[] rawSenses = sp.getRawSenseData();
+        // 0: get the simulator status
+        String simStatus = rawSenses[0];
         // 1: get the smell info
-        String heading = rawSenses[0];
+        String heading = rawSenses[1];
         // 2: get the inventory
         String inv = "";
         for(Character i : sp.getInventory()){
@@ -104,13 +106,13 @@ public class KeyboardController extends AbstractAgentController {
         }
         //String ground = rawSenses[3];
         // 5: get messages
-        String messages = rawSenses[4]; //CHECKS MESSAGES ****CHANGE****
+        String messages = rawSenses[5]; //CHECKS MESSAGES ****CHANGE****
         // 6: energy
-        String energy = rawSenses[5];
+        String energy = rawSenses[6];
         // 7: lastActionStatus
-        String lastActionStatus = rawSenses[6];
+        String lastActionStatus = rawSenses[7];
         // 8: world time
-        String worldTime = rawSenses[7];
+        String worldTime = rawSenses[8];
 
         // store or update according to the data just read. . . .
         gd.updateGDObjects(visField);

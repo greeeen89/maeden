@@ -108,26 +108,27 @@ public class SensoryPacket
      */
     protected void initPreProcessedFields(String[] rawSenseData){
         try {
+            this.status = rawSenseData[0];
             // smell
-            this.smell = rawSenseData[0];
+            this.smell = rawSenseData[1];
             // process inventory
             this.inventory = new ArrayList<Character>();
-            for(char item : rawSenseData[1].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
+            for(char item : rawSenseData[2].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
                 this.inventory.add(item);
             // visual field
-            processRetinalField(rawSenseData[2]);
+            processRetinalField(rawSenseData[3]);
             // ground contents
             this.groundContents = new ArrayList<Character>();
-            for(char item : rawSenseData[3].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
+            for(char item : rawSenseData[4].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
                 this.groundContents.add(item);
             // messages: *** Revisit this!! ***
-            this.messages = rawSenseData[4];
+            this.messages = rawSenseData[5];
             // energy
-            this.energy = Integer.parseInt(rawSenseData[5]);
+            this.energy = Integer.parseInt(rawSenseData[6]);
             // lastActionStatus
-            this.lastActionStatus = rawSenseData[6].equalsIgnoreCase("ok");
+            this.lastActionStatus = rawSenseData[7].equalsIgnoreCase("ok");
             // world Time
-            this.worldTime = Integer.parseInt(rawSenseData[7]);
+            this.worldTime = Integer.parseInt(rawSenseData[8]);
         }catch (NullPointerException e){ e.getMessage(); }
 
     }

@@ -53,6 +53,7 @@ public class SensoryPacketSender
             JSONArray jsonArray = new JSONArray();
             // We added String.valueOf to make sure that everything that is send is a String.
             //jsonArray.add(a.status());
+            jsonArray.add(simStatus); // 0. send simulator status
             jsonArray.add(String.valueOf(Grid.relDirToPt(a.pos, new Point(a.dx(), a.dy()), food.pos))); // 1. send smell
             JSONArray invArray = new JSONArray();
             
@@ -70,7 +71,6 @@ public class SensoryPacketSender
             jsonArray.add(String.valueOf(a.energy()));  // 6. send agent's energy
             jsonArray.add(String.valueOf(a.lastActionStatus()));// 7. send last-action status
             jsonArray.add(String.valueOf(a.simTime())); // 8. send world time
-            jsonArray.add(simStatus); // 9. send simulator status
             a.send().println(jsonArray); // send JsonArray
             a.setNeedUpdate(false);
         }

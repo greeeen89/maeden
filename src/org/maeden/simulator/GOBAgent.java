@@ -39,6 +39,7 @@ public class GOBAgent extends GridObject {
     private int INVENTORYCAPACITY = 100;
 
     // OTHERS ....
+    private SensoryPacketSender sps;
     private ComSentence agentCom;      //for constructing messages
     private static int idSequence = 0; // source for unique agent IDs
     ///*maedengraphics
@@ -134,6 +135,9 @@ public class GOBAgent extends GridObject {
         //maedengraphics*/
         newPrintChar('A');   //Agent's printchar is A
         inventory = new LinkedList<GridObject>();
+        
+        // initialize SensoryPacketSender
+        sps = new SensoryPacketSender(myGrid.myMap(), myGrid.food());
     }
 
     /** Constructor for use by KeyboardController ONLY
@@ -387,7 +391,8 @@ public class GOBAgent extends GridObject {
         // if useobj is food, then eat and end
         if ( useTool != null && useTool.printChar() == '+'){
             if ( myGrid.EAT_FOOD_ENDS_IT ){
-                send.println("success");                                //agent succeeded in using the food
+                //send.println("success");                                //agent succeeded in using the food
+                sps.sendSensationsToAgent(this, "SUCCESS");
                 status = 's';
                 return; // this is the end */
             } else {
@@ -472,7 +477,8 @@ public class GOBAgent extends GridObject {
         if (myGrid.myMap()[pos.x][pos.y] != null)
             for (GridObject go : (myGrid.myMap())[pos.x][pos.y]) {
                 if ( go.printChar() == 'Q' ){
-                    send.println("die");
+                    //send.println("die");
+                    sps.sendSensationsToAgent(this, "DIE");
                     status = 'd';
                 }
             }
@@ -483,7 +489,8 @@ public class GOBAgent extends GridObject {
      */
     private void dieIfNoEnergy() {
         if(agentEnergy <= 0) {
-            send.println("die");                                //agent died
+            //send.println("die");                                //agent died
+            sps.sendSensationsToAgent(this, "DIE");
             status = 'd';
         }
     }
