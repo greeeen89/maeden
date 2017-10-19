@@ -89,5 +89,4 @@ public class GridClient {
         gridOut.println(toSend);
     }
         
-    
 }
