@@ -61,7 +61,7 @@ public class SensoryPacket
         status = inptStatus;
         smell = inptSmell;
         inventory = inptInventory;
-        visualArray = inptVisualArray;
+        //visualArray = inptVisualArray;
         groundContents = inptGroundContents;
         messages = inptMessages;
         energy = inptEnergy;
@@ -87,11 +87,9 @@ public class SensoryPacket
      */
     protected String[] getRawSenseDataFromGrid(BufferedReader gridIn) {
         String[] result = new String[Integer.parseInt(NUMLINES)];
-        //ArrayList<String> intermediate = new ArrayList<String>(); // = new String[Integer.parseInt(NUMLINES)]
         try {
             JSONParser jsonParser = new JSONParser();
             jsonArray = (JSONArray) jsonParser.parse(gridIn.readLine()); // unpack the JsonArray.
-            //JSONArray jsonArray = (JSONArray) object;
             for (int i = 0 ; i < jsonArray.size() ; i++){
                 result[i] = jsonArray.get(i).toString(); // fill the the resultArray with the information.
             }
@@ -115,7 +113,7 @@ public class SensoryPacket
             for(char item : rawSenseData[1].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
                 this.inventory.add(item);
             // visual field
-            processRetinalField((String) jsonArray.get(2));
+            //processRetinalField((String) jsonArray.get(2));
             // ground contents
             this.groundContents = new ArrayList<Character>();
             for(char item : rawSenseData[3].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
@@ -129,7 +127,6 @@ public class SensoryPacket
             // world Time
             this.worldTime = Integer.parseInt(rawSenseData[7]);
         }catch (NullPointerException e){ e.getMessage(); }
-
     }
 
     /**
@@ -211,20 +208,15 @@ public class SensoryPacket
     /**
      * @return the array of lists of strings representing what is currently within the field of view
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<ArrayList<Vector<String>>> getVisualArray(){
         JSONArray visJSON = (JSONArray) jsonArray.get(2);
         for(int i = 0 ; i < visJSON.size() ; i++){
-            ArrayList<Vector<String>> z = (ArrayList<Vector<String>>) visJSON;
             for(int j = 0 ; j < ((JSONArray) visJSON.get(i)).size(); j++){
-                Vector<String> y = (Vector<String>) ((JSONArray) visJSON.get(i)).get(j);
                 for(int k = 0 ; k < ( (JSONArray) ( (JSONArray) visJSON.get(i)).get(j)).size() ; k++){
                     String x = (String) ( (JSONArray) ( (JSONArray) visJSON.get(i)).get(j)).get(k);
                     visualArray.get(i).get(j).add(x);
                 }
-                visualArray.get(i).add(y);
             }
-            visualArray.add(z);
         }
         return visualArray; }
 
