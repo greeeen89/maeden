@@ -294,18 +294,19 @@ public class KeyboardController extends AbstractAgentController {
             @SuppressWarnings("unchecked")
             public void actionPerformed(ActionEvent e){
                 commandString = text.getText().toLowerCase();
-                JSONObject toSend = new JSONObject();
-                toSend.put("command", commandString);
-                JSONArray strings = new JSONArray();
-                if(commandString.length() > 1){
-                    strings.add(commandString.substring(2,3));
-                    toSend.put("arguments", strings);
-                }
+//                JSONObject toSend = new JSONObject();
+//                toSend.put("command", commandString);
+//                JSONArray strings = new JSONArray();
+//                if(commandString.length() > 1){
+//                    strings.add(commandString.substring(2,3));
+//                    toSend.put("arguments", strings);
+//                }
                 
                 if (invalidCommand(commandString)){
                     printHelp();
                 } else {
-                    gridOut.println(toSend);
+                    gc.effectorSend(commandString);
+                    //gridOut.println(toSend);
                     //System.out.println("SENT: " + text.getText().toLowerCase());
                 }
                 text.setText("");

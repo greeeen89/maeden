@@ -86,7 +86,7 @@ public class GridClient {
             strings.add(command.substring(2,3));
             toSend.put("arguments", strings);
         }
-        
+        gridOut.println(toSend);
     }
         
     
