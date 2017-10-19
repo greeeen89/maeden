@@ -10,6 +10,8 @@ import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.maeden.simulator.GOBAgent;
 import org.maeden.simulator.GOBDoor;
 import org.maeden.simulator.GOBFood;
@@ -154,6 +156,7 @@ public class KeyboardController extends AbstractAgentController {
                     }
     }
 
+    
  
     /**
      * run iterates through program commands
@@ -288,12 +291,21 @@ public class KeyboardController extends AbstractAgentController {
                 //System.out.println("initialized");
             }
 
+            @SuppressWarnings("unchecked")
             public void actionPerformed(ActionEvent e){
                 commandString = text.getText().toLowerCase();
+                JSONObject toSend = new JSONObject();
+                toSend.put("command", commandString);
+                JSONArray strings = new JSONArray();
+                if(commandString.length() > 1){
+                    strings.add(commandString.substring(2,3));
+                    toSend.put("arguments", strings);
+                }
+                
                 if (invalidCommand(commandString)){
                     printHelp();
                 } else {
-                    gridOut.println(commandString);
+                    gridOut.println(toSend);
                     //System.out.println("SENT: " + text.getText().toLowerCase());
                 }
                 text.setText("");
