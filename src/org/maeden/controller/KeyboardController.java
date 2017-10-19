@@ -166,8 +166,11 @@ public class KeyboardController extends AbstractAgentController {
      * post: program is run and exited when the agent reaches the food
      */
     public void run() {
+        System.out.println("Starts OK");
         getSensoryInfo();
+        System.out.println("Pass1");
         processSensoryInfo();
+        System.out.println("Pass2");
         while(true) {
             gd.repaint();
             getSensoryInfo();
@@ -184,6 +187,7 @@ public class KeyboardController extends AbstractAgentController {
      */
     public static void main(String [] args) {
         KeyboardController client = new KeyboardController("localhost", MAEDENPORT);
+        System.out.println("Starting");
         client.run();
     }
     
