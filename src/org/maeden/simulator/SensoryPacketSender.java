@@ -83,7 +83,7 @@ public class SensoryPacketSender
         JSONArray visFieldArray = new JSONArray();
         int senseRow, senseCol;
         //iterate from one behind to five in front of agent point
-        for (int relRow=-1; relRow <= 5; relRow++) {
+        for (int relRow = 5; relRow >= -1; relRow--) {
             JSONArray rowVisArray = new JSONArray();
             //iterate from two to the left to two to the right of agent point
             for (int relCol=-2; relCol <= 2; relCol++){
