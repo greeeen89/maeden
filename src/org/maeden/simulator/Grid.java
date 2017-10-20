@@ -57,7 +57,7 @@ public class Grid
     private GridObject food;                   //world goal
     public static final int MAEDENPORT = 7237; //host server port number
     private ServerSocket gwServer;  // server-socket for listening for connection requests
-    public boolean RUN_SIM = true;
+    public volatile boolean RUN_SIM = true;
     public boolean EAT_FOOD_ENDS_IT = true; // control if eating food terminates sim (true) or increases energy (false)
     public int WORLD_CYCLE_TIME = 200;      // replaces sleepTime to control wall-time length of simulation cycle
 
@@ -563,6 +563,7 @@ public class Grid
           }
           catch(Exception e) {System.out.println("error closing server socket");}*/
         RUN_SIM = false;  // halt run method in Grid
+        System.out.println("RUN_SIM set to false");
     }
     //socket.Shutdown(SocketShutdown.Both);
     //socket.Close();
@@ -590,6 +591,8 @@ public class Grid
      */
     public static void main(String[] args){
         int windowWidth = 600;
+        System.out.println("just started main function: 1 (main)");
+        System.out.println(Thread.activeCount());
         Grid myGrid = null;
         boolean showD = true;
 
@@ -610,7 +613,11 @@ public class Grid
             //if(showD)  //if graphical display is desired, show the window
             //   myGrid.setVisible(true);
             //maedengraphics*/
+            System.out.println("after constructor: 2");
+            System.out.println(Thread.activeCount());
             if (myGrid != null) myGrid.run();  //run the simulation
+            System.out.println("left the run method");
+            System.out.println(Thread.activeCount());
         }
         catch (FileNotFoundException e) { System.out.println("Could not find file"); }
         catch (Exception e) { System.out.println("Some exception: " + e); }
@@ -641,7 +648,7 @@ public class Grid
         /** the run method for this AgentListener thread gets called by start() */
         public void run() {
             Socket tSock;
-            while (true) {
+            while (RUN_SIM) {
                 try {
                     tSock = srvSock.accept();           // listen for connection, and
                     GOBAgent gagent = new GOBAgent(x,y,squareSize,grid,tSock,head);
