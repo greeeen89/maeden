@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  *@author:  Wayne Iba,
@@ -60,7 +61,8 @@ public class Grid
     public volatile boolean RUN_SIM = true;
     public boolean EAT_FOOD_ENDS_IT = true; // control if eating food terminates sim (true) or increases energy (false)
     public int WORLD_CYCLE_TIME = 200;      // replaces sleepTime to control wall-time length of simulation cycle
-
+    public AgentListener al = null;
+    
     // Constructors
 
     /**
@@ -105,7 +107,7 @@ public class Grid
                     // place the FoodCollector here
                     GOBFoodCollect fc = new GOBFoodCollect(x,y,squareSize);
                     // start the AgentListener thread
-                    AgentListener al = new AgentListener(x,y,squareSize,this,gwServer,'W');
+                    al = new AgentListener(x,y,squareSize,this,gwServer,'W');
                     al.start();
                     //System.out.println("AgentListener just started");
                     break;
@@ -185,6 +187,11 @@ public class Grid
     //public accessor for the grid map
     public LinkedListGOB[][] myMap() {
         return myMap;
+    }
+    
+    //public accessor for the Agent listener
+    public AgentListener al() {
+        return al;
     }
 
     //public accessor for the gobs
@@ -546,9 +553,6 @@ public class Grid
      * POST: buffers and sockets closed, grid exits
      */
     public void cleanClose() {
-        // *********** only for demo purposes *** remove
-        //try {Thread.sleep(20000);} catch (Exception e) {System.out.println("error with sleeping"); }
-        // *** remove **********************************
         if( agents != null && !agents.isEmpty() ) {  //if there are agents on the grid still
             for(GOBAgent g : agents) {  //iterate through and close their connections
                 g.printstats();
@@ -558,15 +562,9 @@ public class Grid
             }
             agents.clear();
         }
-        /*try {
-          gwServer.close();
-          }
-          catch(Exception e) {System.out.println("error closing server socket");}*/
         RUN_SIM = false;  // halt run method in Grid
-        System.out.println("RUN_SIM set to false");
+        this.dispose(); //dispose() cleanly closes the grid frame
     }
-    //socket.Shutdown(SocketShutdown.Both);
-    //socket.Close();
 
     /** print the proper usage of the program
      */
@@ -591,8 +589,6 @@ public class Grid
      */
     public static void main(String[] args){
         int windowWidth = 600;
-        System.out.println("just started main function: 1 (main)");
-        System.out.println(Thread.activeCount());
         Grid myGrid = null;
         boolean showD = true;
 
@@ -613,11 +609,8 @@ public class Grid
             //if(showD)  //if graphical display is desired, show the window
             //   myGrid.setVisible(true);
             //maedengraphics*/
-            System.out.println("after constructor: 2");
-            System.out.println(Thread.activeCount());
             if (myGrid != null) myGrid.run();  //run the simulation
-            System.out.println("left the run method");
-            System.out.println(Thread.activeCount());
+            myGrid.gwServer.close();
         }
         catch (FileNotFoundException e) { System.out.println("Could not find file"); }
         catch (Exception e) { System.out.println("Some exception: " + e); }
@@ -648,7 +641,7 @@ public class Grid
         /** the run method for this AgentListener thread gets called by start() */
         public void run() {
             Socket tSock;
-            while (RUN_SIM) {
+            while (RUN_SIM) { //RUN_SIM is set to false in clean close()
                 try {
                     tSock = srvSock.accept();           // listen for connection, and
                     GOBAgent gagent = new GOBAgent(x,y,squareSize,grid,tSock,head);
@@ -666,11 +659,12 @@ public class Grid
                         }
                         catch(Exception e) {System.out.println("error closing server socket");}
                     }
+                } catch (SocketException e) { //to clean close the Agent Listener
                 } catch (IOException e) { System.out.println("AgentListener.run(): failed accepting socket connection: " + e);
                 } catch (Exception e) {
                     System.out.println("AgentListener.run(): some other exception: ");
                     e.printStackTrace();
-                }
+                } 
             }
         }
     }
