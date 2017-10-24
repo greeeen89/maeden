@@ -100,7 +100,9 @@ public class SensoryPacket
         } catch (Exception e){
             System.out.println("Error with parsing");
             e.getMessage();
-            System.exit(1); // exist if all the elements in the JsonArray are null.
+            //System.exit(1); // exist if all the elements in the JsonArray are null.
+            result[0] = "false";
+            return result;
         }
         return result;
     }
