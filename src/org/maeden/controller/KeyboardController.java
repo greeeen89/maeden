@@ -179,7 +179,6 @@ public class KeyboardController extends AbstractAgentController {
             getSensoryInfo();
             processSensoryInfo();
         }
-        System.out.println("I got here");
         myWin.dispose();
     }
 
