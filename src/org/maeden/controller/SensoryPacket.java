@@ -47,12 +47,8 @@ public class SensoryPacket
                 visualArray.get(row).add(col, new Vector<String>());
             }
         }
-        System.out.println("Getting raw sense from grid...");
         rawSenseData = getRawSenseDataFromGrid(gridIn);
-        System.out.println("Raw sense retrieved");
-        System.out.println("Processing fields...");
         initPreProcessedFields(rawSenseData);
-        System.out.println("Fields processed");
     }
 
     /**

@@ -109,7 +109,6 @@ public class Grid
                     // start the AgentListener thread
                     al = new AgentListener(x,y,squareSize,this,gwServer,'W');
                     al.start();
-                    //System.out.println("AgentListener just started");
                     break;
                 case '+': //food
                     food = new GOBFoodSupply(x,y,squareSize);
@@ -270,11 +269,9 @@ public class Grid
             System.out.println("Failed processing the next command just read");
             e.printStackTrace();
         }
-        //System.out.println("About to collect messages");
         try {
             getAgentMessages();             //places any messages generated from agent actions inside msgs linked list
         } catch (Exception e) { System.out.println("Failed processing the messages: " + e);}
-        //System.out.println("Messages collected");
         try {
             for(Iterator<GOBAgent> i = agents.iterator(); i.hasNext(); ) {          //remove any dead agents
                 GOBAgent a = i.next();
@@ -601,7 +598,6 @@ public class Grid
         boolean showD = true;
 
         // populate world from file
-        System.out.println("Does it print?");
         try {
             switch ( args.length ) {
             case 0: myGrid = new Grid("worlds/miscX1", windowWidth, showD); break;
