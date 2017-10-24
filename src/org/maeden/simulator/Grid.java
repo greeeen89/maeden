@@ -653,7 +653,7 @@ public class Grid
                     grid.addGOB(gagent); // addGOB(...) is synchronized on gobs
                     synchronized (agents) {
                         agents.add(gagent);
-                        Collections.shuffle(agents);
+                        Collections.shuffle(agents); // shuffle agents whenever a new agent is added
                     }
                     try { sps.sendSensationsToAgent(gagent); }
                     catch (Exception e) {System.out.println("AgentListener.run(): failure sending sensations " + e); }
