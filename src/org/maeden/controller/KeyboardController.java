@@ -175,7 +175,7 @@ public class KeyboardController extends AbstractAgentController {
             gd.repaint();
             getSensoryInfo();
             processSensoryInfo();
-            System.out.println("Running");
+            System.out.println("Running...");
         }
     }
 
@@ -187,7 +187,7 @@ public class KeyboardController extends AbstractAgentController {
      */
     public static void main(String [] args) {
         KeyboardController client = new KeyboardController("localhost", MAEDENPORT);
-        System.out.println("Starting");
+        System.out.println("Starting...");
         client.run();
     }
     

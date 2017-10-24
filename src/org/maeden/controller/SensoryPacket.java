@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
 public class SensoryPacket
 {
 
-    public static final String NUMLINES = "8";
+    public static final String NUMLINES = "9";
 
     String status;
     String smell;
@@ -47,8 +47,12 @@ public class SensoryPacket
                 visualArray.get(row).add(col, new Vector<String>());
             }
         }
+        System.out.println("Getting raw sense from grid...");
         rawSenseData = getRawSenseDataFromGrid(gridIn);
+        System.out.println("Raw sense retrieved");
+        System.out.println("Processing fields...");
         initPreProcessedFields(rawSenseData);
+        System.out.println("Fields processed");
     }
 
     /**
@@ -90,10 +94,15 @@ public class SensoryPacket
         try {
             JSONParser jsonParser = new JSONParser();
             jsonArray = (JSONArray) jsonParser.parse(gridIn.readLine()); // unpack the JsonArray.
+            System.out.println(jsonArray);
+            System.out.println("size: " + jsonArray.size());
             for (int i = 0 ; i < jsonArray.size() ; i++){
                 result[i] = jsonArray.get(i).toString(); // fill the the resultArray with the information.
+                System.out.println(i);
             }
+            //System.out.println("I made it");
         } catch (Exception e){
+            System.out.println("Error with parsing");
             e.getMessage();
             System.exit(1); // exist if all the elements in the JsonArray are null.
         }
@@ -106,6 +115,7 @@ public class SensoryPacket
      */
     protected void initPreProcessedFields(String[] rawSenseData){
         try {
+            // statu
             this.status = rawSenseData[0];
             // smell
             this.smell = rawSenseData[1];
@@ -114,7 +124,7 @@ public class SensoryPacket
             for(char item : rawSenseData[2].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
                 this.inventory.add(item);
             // visual field
-            processRetinalField(rawSenseData[3]);
+            //processRetinalField(rawSenseData[3]);
             // ground contents
             this.groundContents = new ArrayList<Character>();
             for(char item : rawSenseData[4].replaceAll("[\\(\"\\)\\s]+","").toCharArray())
@@ -190,7 +200,7 @@ public class SensoryPacket
         String comma = ",";
         List<Character> finalInv = new ArrayList<Character>();
         finalInv.add(open.charAt(0));
-        JSONArray inv = (JSONArray) jsonArray.get(1);
+        JSONArray inv = (JSONArray) jsonArray.get(2);
         for(int i = 0 ; i < inv.size() ; i++){
             for(int j = 0 ; j < inv.get(i).toString().length() ; j++){
                 String x = inv.get(i).toString();
@@ -210,7 +220,7 @@ public class SensoryPacket
      * @return the array of lists of strings representing what is currently within the field of view
      */
     public ArrayList<ArrayList<Vector<String>>> getVisualArray(){
-        JSONArray visJSON = (JSONArray) jsonArray.get(2);
+        JSONArray visJSON = (JSONArray) jsonArray.get(3);
         for(int i = 0 ; i < visJSON.size() ; i++){
             for(int j = 0 ; j < ((JSONArray) visJSON.get(i)).size(); j++){
                 for(int k = 0 ; k < ( (JSONArray) ( (JSONArray) visJSON.get(i)).get(j)).size() ; k++){
@@ -232,7 +242,7 @@ public class SensoryPacket
         String comma = ",";
         String quote = "\"";
         finalGround.add(open.charAt(0));
-        JSONArray ground = (JSONArray) jsonArray.get(3);
+        JSONArray ground = (JSONArray) jsonArray.get(4);
         for(int i = 0 ; i < ground.size() ; i++){
             for(int j = 0 ; j < ground.get(i).toString().length()-1 ; j++){
                 String x = ground.get(i).toString();

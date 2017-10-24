@@ -52,8 +52,11 @@ public abstract class AbstractAgentController {
      * which can be unpacked at will
      */
     public void getSensoryInfo() {
+    System.out.println("getSensoryInfo starting...");
 	currentSensePacket = gc.getSensoryPacket();
+	System.out.println("GSI Pass1");
 	currentRawSenseData = currentSensePacket.getRawSenseData();
+	System.out.println("GSI Pass2");
     }
 
 }

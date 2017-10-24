@@ -65,7 +65,9 @@ public class GridClient {
      * @return the latest sensory information from the Grid server wrapped in a SensoryPacket
      */
     public SensoryPacket getSensoryPacket() {
+        System.out.println("Trying to get packet...");
         SensoryPacket sp = new SensoryPacket(gridIn);
+        System.out.println("Got packet");
         return sp;
     }
 
