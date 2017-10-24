@@ -43,6 +43,7 @@ import org.maeden.simulator.GridObject;
 public class KeyboardController extends AbstractAgentController {
     
     //private data field
+    private Boolean RUN_CONTROL = true;
     private Frame myWin;
     private Insets iTrans;
     private static final int cellSize = 60;             // sets the width and height of individual visual cells
@@ -86,8 +87,13 @@ public class KeyboardController extends AbstractAgentController {
      */
      public void processSensoryInfo() {
         SensoryPacket sp = currentSensePacket;
-        //sp.printVisualArray();
+        //sp.printVisualArray(); 
         String[] rawSenses = sp.getRawSenseData();
+        if(rawSenses[0] == "false") 
+            {
+                RUN_CONTROL = false;
+                return;
+            }
         // 1: get the smell info
         String heading = rawSenses[0];
         // 2: get the inventory
@@ -166,11 +172,13 @@ public class KeyboardController extends AbstractAgentController {
     public void run() {
         getSensoryInfo();
         processSensoryInfo();
-        while(true) {
+        while(RUN_CONTROL) {
             gd.repaint();
             getSensoryInfo();
             processSensoryInfo();
         }
+        System.out.println("I got here");
+        myWin.dispose();
     }
 
 
